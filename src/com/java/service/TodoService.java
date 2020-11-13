@@ -56,6 +56,15 @@ public class TodoService implements TodoServiceInterface {
         return "Wrong password";
     }
 
+    /**
+     * add a todo item, start time must before end time
+     * @param name user name
+     * @param password password
+     * @param label todo label
+     * @param start start time
+     * @param end end time
+     * @return todo's index and execute result
+     */
     @Override
     @WebMethod
     public String addTodo(String name, String password, String label, Date start, Date end) {
@@ -66,6 +75,9 @@ public class TodoService implements TodoServiceInterface {
         if (!user.getPassword().equals(password)) {
             return "Wrong password";
         }
+        if (start.compareTo(end) > -1) {
+            return "Start after end";
+        }
 
         Todo todo = new Todo(label, start, end);
         user.getTodoList().add(todo);
@@ -73,6 +85,14 @@ public class TodoService implements TodoServiceInterface {
         return "Added successfully, Todo:" + todo.getIndex();
     }
 
+    /**
+     * check all todo in time interval
+     * @param name user name
+     * @param password password
+     * @param start start Date
+     * @param end end Date
+     * @return all qualified Todo or execute result
+     */
     @Override
     @WebMethod
     public String checkTodo(String name, String password, Date start, Date end) {
@@ -103,6 +123,13 @@ public class TodoService implements TodoServiceInterface {
         return stringBuilder.toString();
     }
 
+    /**
+     * delete the specific Todo
+     * @param name username
+     * @param password password
+     * @param index the index of Todo
+     * @return execute result
+     */
     @Override
     @WebMethod
     public String deleteTodo(String name, String password, int index) {
@@ -125,6 +152,12 @@ public class TodoService implements TodoServiceInterface {
         return "Todo " + index + " not found";
     }
 
+    /**
+     * clear all Todo item
+     * @param name username
+     * @param password password
+     * @return execute result
+     */
     @Override
     @WebMethod
     public String clearTodo(String name, String password) {
